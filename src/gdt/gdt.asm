@@ -1,6 +1,12 @@
 
 [bits 64]
+
+global GDTR
+
+GDTR:
+    resb 8
 LoadGDT:   
+    mov [GDTR], rdi
     lgdt [rdi]
     mov ax, 0x10
     mov ds, ax

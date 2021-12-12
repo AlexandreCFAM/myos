@@ -26,6 +26,7 @@
 #include "panic.h"
 #include "cpu/registers.h"
 #include "shutdown.h"
+#include "timer/pit.h"
 
 struct BootInfo
 {

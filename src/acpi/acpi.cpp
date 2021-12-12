@@ -67,47 +67,12 @@ ACPI::ACPI(struct RSDPDescriptorNewVersion *rsdp)
     if(fadt == NULL)
     {
         panic("FADT is not found in the memory!");
-    }else basicRenderer.Successln("FADT table selected!");
+    }else basicRenderer.Successln("FADT table located!");
 
-    // We detect many informations about the system thanks to this table
+    MainSystemConfiguration.fadt = fadt;
 
-    MainSystemConfiguration.PowerManagementProfile = fadt->PreferredPowerManagementProfile;
-    basicRenderer.Log("Power Management Profile detected as : ");
-    switch(MainSystemConfiguration.PowerManagementProfile)
-    {
-        case 0:
-            basicRenderer.Println("Undefined");
-            break;
-        case 1:
-            basicRenderer.Println("Desktop");
-            break;
-        case 2:
-            basicRenderer.Println("Mobile");
-            break;
-        case 3:
-            basicRenderer.Println("WorkStation");
-            break;
-        case 4:
-            basicRenderer.Println("Enterprise Server");
-            break;
-        case 5:
-            basicRenderer.Println("SOHO Server");
-            break;
-        case 6:
-            basicRenderer.Println("Aplliance PC");
-            break;
-        case 7:
-            basicRenderer.Println("Performance Server");
-            break;
-        default:
-            basicRenderer.Println("Reserved");
-            break;
-    }
-    MainSystemConfiguration.dsdt = (uint64_t*)fadt->X_Dsdt;
-
-    basicRenderer.Success("DSDT detected at 0x");
-    basicRenderer.Print(ToHexString((uint64_t)MainSystemConfiguration.dsdt));
-    basicRenderer.Println("!");
+    FixedACPIDescriptionTable _fadt(MainSystemConfiguration.fadt);
+    _fadt.main();
 }
 
 ACPI::~ACPI()

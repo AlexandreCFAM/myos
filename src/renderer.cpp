@@ -37,12 +37,10 @@ void BasicRenderer::putChar(char c, unsigned int colour, unsigned int _x, unsign
     {
         MainTextCursor.x = 0;
         MainTextCursor.y += HEIGHT_CHAR;
-        if(MainTextCursor.y >= BasicRenderer::framebuffer->Height)
-        {
-            //TODO scroll
-            BasicRenderer::scroll(1); //do the cursor arrangment
-            MainTextCursor.y = BasicRenderer::framebuffer->Height;
-        }
+    }
+    if(MainTextCursor.y >= 976)
+    {
+        BasicRenderer::scroll(1);
     }
 }
 
@@ -223,6 +221,12 @@ void BasicRenderer::scroll(uint8_t n)
     uint32_t *end = (uint32_t*)(base + (uint32_t)(BasicRenderer::framebuffer->Width * BasicRenderer::framebuffer->Height));
     uint32_t *start = (uint32_t*)(base + pixnumber);
     for(uint32_t *pixel = start; pixel < end; pixel++) *(pixel - pixnumber) = *pixel;
+    MainTextCursor.y -= n * HEIGHT_CHAR;
+}
+
+void BasicRenderer::verif_coos_for_scroll()
+{
+    if(MainTextCursor.y >= BasicRenderer::framebuffer->Height) BasicRenderer::scroll(1); else;
 }
 
 void BasicRenderer::Error(const char *text)

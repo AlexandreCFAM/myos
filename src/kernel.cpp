@@ -64,10 +64,13 @@ extern "C" void _start(BootInfo *_bootInfo)
 
     basicRenderer.Log("Initializing PS2 mouse...");
     InitPS2Mouse();
+    basicRenderer.OK();
+
+    basicRenderer.Logln("Masking Interrupts...");
     outb(PIC1_DATA, 0b11111001);
     outb(PIC2_DATA, 0b11101111);
-    asm ("sti");
-    basicRenderer.OK();
+    asm("sti");
+    
     basicRenderer.Logln("PS2 Keyboard initialized!");
     
     uint64_t StartMemoryManager = (uint64_t)GlobalAllocator.RequestPage();

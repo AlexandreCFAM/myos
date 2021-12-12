@@ -64,6 +64,7 @@ public:
     uint32_t GetPixel(uint32_t x, uint32_t y);
     void ClearMouseCursor(uint8_t *mouseCursor, long x, long y);
     void scroll(uint8_t n);
+    void verif_coos_for_scroll();
     void Error(const char *text);
     void Errorln(const char *text);
     void ErrorFlag();

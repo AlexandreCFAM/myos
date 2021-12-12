@@ -22,7 +22,6 @@ __attribute__((interrupt)) void DoubleFaultHandler(struct interrupt_frame *frame
 __attribute__((interrupt)) void GeneralProtectionHandler(struct interrupt_frame *frame);
 __attribute__((interrupt)) void KeyboardInterruptHandler(struct interrupt_frame *frame);
 __attribute__((interrupt)) void MouseInterruptHandler(struct interrupt_frame *frame);
-
 void RemapPIC();
 void PIC_EndMaster();
 void PIC_EndSlave();

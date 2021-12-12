@@ -4,6 +4,7 @@
 #include "rsdp.h"
 #include "../panic.h"
 #include "sdt.h"
+#include "fadt.h"
 
 class ACPI
 {
@@ -18,7 +19,7 @@ public:
     unsigned char Checksum(SDTCommonHeader *table);
     bool IsChecksumCorrect(SDTCommonHeader *table);
     SDTCommonHeader *FindTable(char *signature);
-    void ListTables();  
+    void ListTables();
 private:
     RSDPDescriptorNewVersion *_rsdp;
     bool version;
@@ -30,7 +31,7 @@ struct SystemConfiguration
 {
     uint8_t PowerManagementProfile;
     XSDT *xsdt;
-    uint64_t *dsdt;
+    FADT *fadt;
 };
 
 extern SystemConfiguration MainSystemConfiguration;
