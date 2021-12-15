@@ -1,6 +1,4 @@
 #include "bitmap.h"
-#include "../defs.h"
-#include <stdint.h>
 
 bool Bitmap::operator[](uint64_t index)
 {

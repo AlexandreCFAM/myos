@@ -1,7 +1,6 @@
 global dump_registers_asm
 global entry_point
 global number_of_registers
-extern GDTR
 
 _number_of_registers equ 15
 

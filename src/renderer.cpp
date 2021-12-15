@@ -1,7 +1,7 @@
 #include "renderer.h"
 #include "kernel.h"
 #include "memory.h"
-#include "cstr.h"
+#include "lib/cstr.h"
 #include <stdint.h>
 
 #define WIDTH_CHAR 8

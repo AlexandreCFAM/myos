@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdint.h>
-#include "../defs.h"
+#include "../lib/defs.h"
 
 // #define BITMAP_SIZE 20
 

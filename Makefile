@@ -70,4 +70,4 @@ buildimg:
 	cp bin/kernel.elf ../usb/kernel.elf
 	cp bin/zap-light16.psf ../usb/zap-light16.psf
 run:
-	qemu-system-x86_64 -d int -drive file=$(BUILDDIR)/$(OSNAME).img -m 50M -cpu qemu64 -drive if=pflash,format=raw,unit=0,file="$(OVMFDIR)/OVMF_CODE-pure-efi.fd",readonly=on -drive if=pflash,format=raw,unit=1,file="$(OVMFDIR)/OVMF_VARS-pure-efi.fd" -smp 1
+	qemu-system-x86_64 -drive file=$(BUILDDIR)/$(OSNAME).img -m 50M -cpu qemu64 -drive if=pflash,format=raw,unit=0,file="$(OVMFDIR)/OVMF_CODE-pure-efi.fd",readonly=on -drive if=pflash,format=raw,unit=1,file="$(OVMFDIR)/OVMF_VARS-pure-efi.fd" -smp 1

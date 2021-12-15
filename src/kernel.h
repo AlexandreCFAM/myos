@@ -2,12 +2,12 @@
 #define __KERNEL__H
 
 #include "renderer.h"
-#include "cstr.h"
+#include "lib/cstr.h"
 #include "memory/efiMemory.h"
 #include "memory.h"
 #include "memory/bitmap.h"
 #include "renderer.h"
-#include "paging/PageFrameAllocator.h"
+#include "paging/frame_alloc.h"
 // #include "paging/paging.h"
 // #include "paging/PageMapIndexer.h"
 // #include "paging/PageTableManager.h"
@@ -15,7 +15,7 @@
 #include "interrupts/IDT.h"
 #include "interrupts/interrupts.h"
 #include "panic.h"
-#include "IO.h"
+#include "hardware/IO.h"
 #include "drivers/PS2/mouse.h"
 #include "drivers/pci.h"
 #include "lib/math.h"
@@ -25,8 +25,9 @@
 #include <stdint.h>
 #include "panic.h"
 #include "cpu/registers.h"
-#include "shutdown.h"
+#include "hardware/shutdown.h"
 #include "timer/pit.h"
+#include "drivers/keyboard/keyboard.h"
 
 struct BootInfo
 {

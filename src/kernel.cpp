@@ -54,6 +54,7 @@ extern "C" void _start(BootInfo *_bootInfo)
     SetIDTGate((void*)GeneralProtectionHandler, 0xD, IDT_TA_InterruptGate, 0x08);
     SetIDTGate((void*)KeyboardInterruptHandler, 0x21, IDT_TA_InterruptGate, 0x08);
     SetIDTGate((void*)MouseInterruptHandler, 0x2C, IDT_TA_InterruptGate, 0x08);
+    SetIDTGate((void*)PITHandler, 0x20, IDT_TA_InterruptGate, 0x08);
 
     asm ("lidt %0" : : "m" (idtr));
     basicRenderer.OK();
@@ -67,10 +68,11 @@ extern "C" void _start(BootInfo *_bootInfo)
     basicRenderer.OK();
 
     basicRenderer.Logln("Masking Interrupts...");
-    outb(PIC1_DATA, 0b11111001);
+    outb(PIC1_DATA, 0b11111000);
     outb(PIC2_DATA, 0b11101111);
     asm("sti");
     
+    Keyboard keyboard = {QWERTY_TYPE};
     basicRenderer.Logln("PS2 Keyboard initialized!");
     
     uint64_t StartMemoryManager = (uint64_t)GlobalAllocator.RequestPage();
@@ -126,6 +128,8 @@ extern "C" void _start(BootInfo *_bootInfo)
     ACPI acpi((RSDPDescriptorNewVersion*)bootInfo->rsdp);
 
     dump_registers();
+
+    PIT.init(1000);
 
     while(true)
     {

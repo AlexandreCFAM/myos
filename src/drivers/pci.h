@@ -1,8 +1,8 @@
 #pragma once
 
 #include <stdint.h>
-#include "../IO.h"
-#include "../cstr.h"
+#include "../hardware/IO.h"
+#include "../lib/cstr.h"
 #include "../kernel.h"
 
 #define ConfigAddress 0xCF8

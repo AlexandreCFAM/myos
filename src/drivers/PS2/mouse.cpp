@@ -1,9 +1,4 @@
 #include "mouse.h"
-#include "../../IO.h"
-#include <stdint.h>
-#include "../../kernel.h"
-#include "../../renderer.h"
-#include "../../cstr.h"
 
 uint8_t MousePointer[] = {
     0b00011000, 0b00011000,

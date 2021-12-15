@@ -1,6 +1,10 @@
 #pragma once
 
 #include <stdint.h>
+#include "../../hardware/IO.h"
+#include "../../kernel.h"
+#include "../../renderer.h"
+#include "../../lib/cstr.h"
 
 #define PS2LEFTBUTTON 0b00000001
 #define PS2MIDDLEBUTTON 0b00000100

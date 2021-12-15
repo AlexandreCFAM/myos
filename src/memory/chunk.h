@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../defs.h"
+#include "../lib/defs.h"
 #include <stdint.h>
 
 namespace Memory

@@ -8,7 +8,7 @@
 #define GREEN 0x0000FF00
 #define YELLOW 0x00FFFF00
 
-#include "defs.h"
+#include "lib/defs.h"
 #include "lib/math.h"
 #include <stdint.h>
 
