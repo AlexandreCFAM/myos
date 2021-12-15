@@ -2,10 +2,13 @@
 
 static Memory::Manager *active;
 
+Memory::Manager memorymanager;
+
 namespace Memory
 {
+    Manager::Manager(){}
 
-    Manager::Manager(uint64_t start, uint64_t size)
+    void Manager::init(uint64_t start, uint64_t size)
     {
         basicRenderer.Logln("Initializing memory manager for dynamic allocation...");
         Manager::first = (Memory::chunk*)start;

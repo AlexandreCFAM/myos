@@ -9,7 +9,8 @@ namespace Memory
     class Manager
     {
     public:
-        Manager(uint64_t start, uint64_t size);
+        Manager();
+        void init(uint64_t start, uint64_t size);
         void *malloc(uint64_t size);
         void free(void *ptr);
         bool test();
@@ -18,3 +19,5 @@ namespace Memory
         uint64_t endmemory;
     };
 };
+
+extern Memory::Manager memorymanager;

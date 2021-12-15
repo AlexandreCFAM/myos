@@ -62,6 +62,27 @@ void Keyboard::handle(uint8_t scancode)
     return;
 }
 
+char Keyboard::handle_on_work(uint8_t scancode)
+{
+    switch(scancode)
+    {
+        case LEFT_SHIFT:
+            IsLeftShiftPressed = true;
+            return 0;
+        case LEFT_SHIFT + SHIFT_RELEASE:
+            IsLeftShiftPressed = false;
+            return 0;
+        case RIGHT_SHIFT:
+            IsRightShiftPressed = true;
+            return 0;
+        case RIGHT_SHIFT + SHIFT_RELEASE:
+            IsRightShiftPressed = false;
+            return 0;
+        default: break;
+    }
+    return ' ';
+}
+
 bool Keyboard::change_type(uint8_t type)
 {
     switch(type)

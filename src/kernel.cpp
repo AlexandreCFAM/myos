@@ -78,7 +78,7 @@ extern "C" void _start(BootInfo *_bootInfo)
     uint64_t StartMemoryManager = (uint64_t)GlobalAllocator.RequestPage();
     uint64_t LengthMemoryAvailableForAllocator = GetMemorySize(bootInfo->mMap, MemoryMapEntries, bootInfo->mMapDescriptorSize) - GlobalAllocator.GetReservedMemory() - GlobalAllocator.GetUsedMemory() - 4096;
 
-    Memory::Manager memorymanager(StartMemoryManager, LengthMemoryAvailableForAllocator);
+    memorymanager.init(StartMemoryManager, LengthMemoryAvailableForAllocator);
     GlobalAllocator.LockPages((void*)StartMemoryManager, (uint64_t)LengthMemoryAvailableForAllocator / 4096 + 1);
     
     if(!memorymanager.test())
@@ -118,7 +118,7 @@ extern "C" void _start(BootInfo *_bootInfo)
                     basicRenderer.Print(" 0x");
                     uint32_t bar = pci.get_bar(bus, device, function, 0);
                     basicRenderer.Print(ToHexString((uint32_t)bar));
-                    dloader.Load(Vendor, Device, Class);
+                    dloader.save(Vendor, Device, Class);
                 }
             }
         }

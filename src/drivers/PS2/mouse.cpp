@@ -149,15 +149,18 @@ void ProcessMousePacket()
     basicRenderer.DrawOverlayMouseCursor(MousePointer, mouseX, mouseY, WHITE);
     if(MousePacket[0] & PS2LEFTBUTTON)
     {
-        basicRenderer.putIndependantChar('a', GREEN, (unsigned int)mouseX, (unsigned int)mouseY);
+        // basicRenderer.putIndependantChar('a', GREEN, (unsigned int)mouseX, (unsigned int)mouseY);
+        basicRenderer.Logln("Mouse PS2 => Left click!");
     }
     if(MousePacket[0] & PS2MIDDLEBUTTON)
     {
-        basicRenderer.putIndependantChar('a', RED, (unsigned int)mouseX, (unsigned int)mouseY);
+        // basicRenderer.putIndependantChar('a', RED, (unsigned int)mouseX, (unsigned int)mouseY);
+        basicRenderer.Logln("Mouse PS2 => Middle click!");
     }
     if(MousePacket[0] & PS2RIGHTBUTTON)
     {
-        basicRenderer.putIndependantChar('a', BLUE, (unsigned int)mouseX, (unsigned int)mouseY);
+        // basicRenderer.putIndependantChar('a', BLUE, (unsigned int)mouseX, (unsigned int)mouseY);
+        basicRenderer.Logln("Mouse PS2 => Right click!");
     }
     MousePackedReady = false;
     oldMouseX = mouseX;

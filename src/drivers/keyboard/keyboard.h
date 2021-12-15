@@ -16,6 +16,7 @@ public:
     Keyboard(uint8_t type);
     ~Keyboard();
     void handle(uint8_t scancode);
+    char handle_on_work(uint8_t scancode);
     bool change_type(uint8_t type);
     void info();
 private:

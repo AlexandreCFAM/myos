@@ -107,7 +107,7 @@ uint64_t ACPI::GetValueValidateRSDPSecondPart()
 {
     uint64_t sumup = 0;
     uint8_t number_of_bytes = sizeof(struct RSDPDescriptorNewVersion) - sizeof(struct RSDPDescriptor);
-    uint8_t *ptr = (uint8_t*)(this->_rsdp->Length); // The address of the _rsdp is the beginning of the first part but I start after it, so at the address of Length
+    uint8_t *ptr = (uint8_t*)(intptr_t)(this->_rsdp->Length); // The address of the _rsdp is the beginning of the first part but I start after it, so at the address of Length
     for(uint8_t i = 0; i < number_of_bytes; i++)
     {
         sumup += (uint64_t)*ptr;
@@ -141,7 +141,7 @@ bool ACPI::IsChecksumCorrect(SDTCommonHeader *table)
 SDTCommonHeader *ACPI::FindTable(char *signature)
 {
     int entries = (this->xsdt_ptr->header.Length - sizeof(this->xsdt_ptr->header)) / 8;
-    uint64_t *next_sdt = (uint64_t*)&this->xsdt_ptr->NextSDT;
+
     for(uint8_t i = 0; i < entries; i++)
     {
         SDTCommonHeader *header = (SDTCommonHeader*)*(uint64_t*)((uint64_t)this->xsdt_ptr + sizeof(SDTCommonHeader) + (i * 8));
@@ -154,7 +154,7 @@ void ACPI::ListTables()
 {
     basicRenderer.Println("List of the tables found on the system : ");
     int entries = (this->xsdt_ptr->header.Length - sizeof(this->xsdt_ptr->header)) / 8;
-    uint64_t *next_sdt = (uint64_t*)&this->xsdt_ptr->NextSDT;
+
     for(uint8_t i = 0; i < entries; i++)
     {
         SDTCommonHeader *header = (SDTCommonHeader*)*(uint64_t*)((uint64_t)this->xsdt_ptr + sizeof(SDTCommonHeader) + (i * 8));
