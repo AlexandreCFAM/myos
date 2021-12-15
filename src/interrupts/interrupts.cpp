@@ -27,7 +27,8 @@ __attribute__((interrupt)) void KeyboardInterruptHandler(struct interrupt_frame 
 __attribute__((interrupt)) void MouseInterruptHandler(struct interrupt_frame *frame)
 {
     uint8_t mouseData = inb(0x60);
-    HandlePS2Mouse(mouseData);
+    // HandlePS2Mouse(mouseData);
+    mouse.handle(mouseData);
     PIC_EndSlave();
 }
 

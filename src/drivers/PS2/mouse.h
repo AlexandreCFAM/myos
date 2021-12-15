@@ -23,6 +23,22 @@ uint8_t MouseRead();
 void HandlePS2Mouse(uint8_t data);
 void ProcessMousePacket();
 
+class Mouse
+{
+public:
+    Mouse();
+    ~Mouse();
+    void init();
+    void handle(uint8_t data);
+    void main();
+private:
+    void wait();
+    void wait_input();
+    void write(uint8_t value);
+    uint8_t read();
+};
+
 extern long mouseX;
 extern long mouseY;
 extern uint8_t MousePointer[];
+extern Mouse mouse;

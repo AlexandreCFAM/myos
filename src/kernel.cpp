@@ -64,7 +64,9 @@ extern "C" void _start(BootInfo *_bootInfo)
     basicRenderer.OK();
 
     basicRenderer.Log("Initializing PS2 mouse...");
-    InitPS2Mouse();
+    // Mouse mouse;
+    // InitPS2Mouse();
+    mouse.init();
     basicRenderer.OK();
 
     basicRenderer.Logln("Masking Interrupts...");
@@ -133,7 +135,8 @@ extern "C" void _start(BootInfo *_bootInfo)
 
     while(true)
     {
-        ProcessMousePacket();
+        // ProcessMousePacket();
+        mouse.main();
     }
     while(true);
 }

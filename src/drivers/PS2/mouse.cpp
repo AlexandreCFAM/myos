@@ -1,5 +1,7 @@
 #include "mouse.h"
 
+Mouse mouse;
+
 uint8_t MousePointer[] = {
     0b00011000, 0b00011000,
     0b00011000, 0b00011000,
@@ -20,26 +22,37 @@ uint8_t MousePointer[] = {
 
 };
 
-void InitPS2Mouse()
+uint8_t MouseCycle = 0;
+uint8_t MousePacket[4];
+bool MousePackedReady = false;
+long mouseX;
+long mouseY;
+long oldMouseX;
+long oldMouseY;
+
+Mouse::Mouse(){}
+
+void Mouse::init()
 {
     outb(0x64, 0xA8);
-    MouseWait();
+    this->wait();
     outb(0x64, 0x20);
-    MouseWaitInput();
+    this->wait_input();
     uint8_t status = inb(0x60);
     status |= 0b10;
-    MouseWait();
+    this->wait();
     outb(0x64, 0x60);
-    MouseWait();
+    this->wait();
     outb(0x60, status);
-    MouseWrite(0xF6);
-    MouseRead();
-    MouseWrite(0xF4);
-    MouseRead();
-
+    this->write(0xF6);
+    this->read();
+    this->write(0xF4);
+    this->read();
 }
 
-void MouseWait()
+Mouse::~Mouse(){}
+
+void Mouse::wait()
 {
     uint64_t timeout = 100000;
     while(timeout)
@@ -49,38 +62,31 @@ void MouseWait()
     }
 }
 
-void MouseWaitInput()
+void Mouse::wait_input()
 {
     uint64_t timeout = 100000;
     while(timeout)
     {
         if(inb(0x64) & 0b1) return;
         timeout--;
-    }
+    }   
 }
 
-void MouseWrite(uint8_t value)
+void Mouse::write(uint8_t value)
 {
-    MouseWait();
+    this->wait();
     outb(0x64, 0xD4);
-    MouseWait();
+    this->wait();
     outb(0x60, value);
 }
 
-uint8_t MouseRead()
+uint8_t Mouse::read()
 {
-    MouseWaitInput();
+    this->wait_input();
     return inb(0x60);
 }
 
-uint8_t MouseCycle = 0;
-uint8_t MousePacket[4];
-bool MousePackedReady = false;
-long mouseX;
-long mouseY;
-long oldMouseX;
-long oldMouseY;
-void HandlePS2Mouse(uint8_t data)
+void Mouse::handle(uint8_t data)
 {
     switch(MouseCycle)
     {
@@ -104,9 +110,9 @@ void HandlePS2Mouse(uint8_t data)
     }
 }
 
-void ProcessMousePacket()
+void Mouse::main()
 {
-    if(!MousePackedReady) return;
+     if(!MousePackedReady) return;
     else MousePackedReady = false;
     bool Xnegative, Ynegative, xOverflow, yOverflow;
     if(MousePacket[0] & PS2XSIGN)
