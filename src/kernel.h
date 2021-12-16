@@ -28,6 +28,7 @@
 #include "hardware/shutdown.h"
 #include "timer/pit.h"
 #include "drivers/keyboard/keyboard.h"
+#include "cpu/cpu.h"
 
 struct BootInfo
 {

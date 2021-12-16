@@ -133,6 +133,8 @@ extern "C" void _start(BootInfo *_bootInfo)
 
     PIT.init(1000);
 
+    CPU cpu;
+
     while(true)
     {
         // ProcessMousePacket();
