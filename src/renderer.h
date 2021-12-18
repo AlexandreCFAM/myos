@@ -8,6 +8,9 @@
 #define GREEN 0x0000FF00
 #define YELLOW 0x00FFFF00
 
+#define WIDTH_CHAR 8
+#define HEIGHT_CHAR 16
+
 #include "lib/defs.h"
 #include "lib/math.h"
 #include <stdint.h>
@@ -59,10 +62,8 @@ public:
     void OK();
     void Log(const char *text);
     void Logln(const char *text);
-    void DrawOverlayMouseCursor(uint8_t *MouseCursor, long x, long y, uint32_t colour);
     void putPixel(uint32_t x, uint32_t y, uint32_t color);
     uint32_t GetPixel(uint32_t x, uint32_t y);
-    void ClearMouseCursor(uint8_t *mouseCursor, long x, long y);
     void scroll(uint8_t n);
     void verif_coos_for_scroll();
     void Error(const char *text);
@@ -75,9 +76,6 @@ public:
     FrameBuffer *framebuffer;
     PSF1_FONT *psf1_font;
     unsigned int ClearColour;
-    uint32_t MouseCursorBuffer[16 * 16];
-    uint32_t MouseCursorBufferAfter[16 * 16];
-    bool MouseDrawn;
     uint32_t CurrentColour;
     uint64_t offset;
 };

@@ -31,14 +31,24 @@ public:
     void init();
     void handle(uint8_t data);
     void main();
+    void show(uint32_t color);
+    void hide();
+    long mouseX;
+    long mouseY;
+    long oldMouseX;
+    long oldMouseY;
+    uint8_t MouseCycle = 0;
+    uint8_t MousePacket[4];
+    bool MousePackedReady = false;
 private:
     void wait();
     void wait_input();
     void write(uint8_t value);
     uint8_t read();
+    uint32_t MouseCursorBuffer[16 * 16];
+    uint32_t MouseCursorBufferAfter[16 * 16];
+    bool MouseDrawn;
 };
 
-extern long mouseX;
-extern long mouseY;
 extern uint8_t MousePointer[];
 extern Mouse mouse;

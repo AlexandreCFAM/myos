@@ -4,9 +4,6 @@
 #include "lib/cstr.h"
 #include <stdint.h>
 
-#define WIDTH_CHAR 8
-#define HEIGHT_CHAR 16
-
 BasicRenderer::BasicRenderer(FrameBuffer *_framebuffer, PSF1_FONT *_psf1_font)
 {
     framebuffer = _framebuffer;
@@ -149,32 +146,6 @@ void BasicRenderer::Logln(const char *text)
     BasicRenderer::Println(text);
 }
 
-void BasicRenderer::DrawOverlayMouseCursor(uint8_t *MouseCursor, long x, long y, uint32_t colour)
-{
-    int futurx = x;
-    int futury = y;
-    int xMax = 16;
-    int yMax = 16;
-    int differenceX = BasicRenderer::framebuffer->Width - x;
-    int differenceY = BasicRenderer::framebuffer->Height - y;
-    if(differenceX < 16) xMax = differenceX;
-    if(differenceY < 16) yMax = differenceY;
-    for(int y = 0; y < yMax; y++)
-    {
-        for(int x = 0; x < xMax; x++)
-        {
-            int bit = y * HEIGHT_CHAR + x;
-            int byte = bit / WIDTH_CHAR;
-            if((MouseCursor[byte] & (0b10000000) >> (x % 8)))
-            {
-                MouseCursorBuffer[x + y * 16] = GetPixel(futurx + x, futury + y);
-                putPixel(futurx + x, futury + y, colour);
-                MouseCursorBufferAfter[x + y * 16] = GetPixel(futurx + x, futury + y);
-            }
-        }
-    }
-    BasicRenderer::MouseDrawn = true;
-}
 
 void BasicRenderer::putPixel(uint32_t x, uint32_t y, uint32_t color)
 {
@@ -186,45 +157,17 @@ uint32_t BasicRenderer::GetPixel(uint32_t x, uint32_t y)
     return *(uint32_t*)((uint64_t)BasicRenderer::framebuffer->BaseAddress + (x * 4) + (y * BasicRenderer::framebuffer->PixelsPerScanLine * 4));
 }
 
-void BasicRenderer::ClearMouseCursor(uint8_t *mouseCursor, long x, long y)
-{
-    if(!BasicRenderer::MouseDrawn) return;
-    int futurx = x;
-    int futury = y;
-    int xMax = 16;
-    int yMax = 16;
-    int differenceX = BasicRenderer::framebuffer->Width - x;
-    int differenceY = BasicRenderer::framebuffer->Height - y;
-    if(differenceX < 16) xMax = differenceX;
-    if(differenceY < 16) yMax = differenceY;
-    for(int y = 0; y < yMax; y++)
-    {
-        for(int x = 0; x < xMax; x++)
-        {
-            int bit = y * HEIGHT_CHAR + x;
-            int byte = bit / WIDTH_CHAR;
-            if((mouseCursor[byte] & (0b10000000) >> (x % 8)))
-            {
-                if(GetPixel(futurx + x, futury + y) == MouseCursorBufferAfter[x + y * 16])
-                {
-                    putPixel(futurx + x, futury + y, MouseCursorBuffer[x + y * 16]);
-                }
-            }
-        }
-    }
-}
-
 void BasicRenderer::scroll(uint8_t n)
 {
     // Need to clear mouse cursor before scrolling
-    this->ClearMouseCursor(MousePointer, mouseX, mouseY);
+    mouse.hide();
     uint32_t *base = (uint32_t*)BasicRenderer::framebuffer->BaseAddress;
     uint32_t pixnumber = n * BasicRenderer::framebuffer->PixelsPerScanLine * HEIGHT_CHAR;
     uint32_t *end = (uint32_t*)(base + (uint32_t)(BasicRenderer::framebuffer->Width * BasicRenderer::framebuffer->Height));
     uint32_t *start = (uint32_t*)(base + pixnumber);
     for(uint32_t *pixel = start; pixel < end; pixel++) *(pixel - pixnumber) = *pixel;
     MainTextCursor.y -= n * HEIGHT_CHAR;
-    this->DrawOverlayMouseCursor(MousePointer, mouseX, mouseY, WHITE);
+    mouse.show(WHITE);
 }
 
 void BasicRenderer::verif_coos_for_scroll()

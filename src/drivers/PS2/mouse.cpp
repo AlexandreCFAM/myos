@@ -22,14 +22,6 @@ uint8_t MousePointer[] = {
 
 };
 
-uint8_t MouseCycle = 0;
-uint8_t MousePacket[4];
-bool MousePackedReady = false;
-long mouseX;
-long mouseY;
-long oldMouseX;
-long oldMouseY;
-
 Mouse::Mouse(){}
 
 void Mouse::init()
@@ -88,87 +80,140 @@ uint8_t Mouse::read()
 
 void Mouse::handle(uint8_t data)
 {
-    switch(MouseCycle)
+    switch(this->MouseCycle)
     {
         case 0:
-            if(MousePackedReady) break;
+            if(this->MousePackedReady) break;
             if(!(data & 0b00001000)) break;
-            MousePacket[0] = data;
-            MouseCycle++;
+            this->MousePacket[0] = data;
+            this->MouseCycle++;
             break;
         case 1:
-            if(MousePackedReady) break;
-            MousePacket[1] = data;
-            MouseCycle++;
+            if(this->MousePackedReady) break;
+            this->MousePacket[1] = data;
+            this->MouseCycle++;
             break;
         case 2:
-            if(MousePackedReady) break;
-            MousePacket[2] = data;
-            MousePackedReady = true;
-            MouseCycle = 0;
+            if(this->MousePackedReady) break;
+            this->MousePacket[2] = data;
+            this->MousePackedReady = true;
+            this->MouseCycle = 0;
             break;
     }
 }
 
 void Mouse::main()
 {
-     if(!MousePackedReady) return;
-    else MousePackedReady = false;
+    if(!this->MousePackedReady) return;
+    else this->MousePackedReady = false;
     bool Xnegative, Ynegative, xOverflow, yOverflow;
-    if(MousePacket[0] & PS2XSIGN)
+    if(this->MousePacket[0] & PS2XSIGN)
     {
         Xnegative = true;
     } else Xnegative = false;
-    if(MousePacket[0] & PS2YSIGN)
+    if(this->MousePacket[0] & PS2YSIGN)
     {
         Ynegative = true;
     } else Ynegative = false;
-    if(MousePacket[0] & PS2XOVERFLOW) xOverflow = true; else xOverflow = false;
-    if(MousePacket[0] & PS2YOVERFLOW) yOverflow = true; else yOverflow = false;
+    if(this->MousePacket[0] & PS2XOVERFLOW) xOverflow = true; else xOverflow = false;
+    if(this->MousePacket[0] & PS2YOVERFLOW) yOverflow = true; else yOverflow = false;
     if(!Xnegative)
     {
-        mouseX += MousePacket[1];
-        if(xOverflow) mouseX += 255;
+        this->mouseX += this->MousePacket[1];
+        if(xOverflow) this->mouseX += 255;
     }
     else
     {
-        MousePacket[1] = 256 - MousePacket[1];
-         mouseX -= MousePacket[1];
-        if(xOverflow) mouseX -= 255;
+        this->MousePacket[1] = 256 - this->MousePacket[1];
+        this->mouseX -= this->MousePacket[1];
+        if(xOverflow) this->mouseX -= 255;
     }
     if(!Ynegative)
     {
-        mouseY -= MousePacket[2];
-        if(yOverflow) mouseY -= 255;
+        this->mouseY -= this->MousePacket[2];
+        if(yOverflow) this->mouseY -= 255;
     }
     else
     {
-        MousePacket[2] = 256 - MousePacket[2];
-        mouseY += MousePacket[2];
-        if(yOverflow) mouseY += 255;
+        this->MousePacket[2] = 256 - this->MousePacket[2];
+        this->mouseY += this->MousePacket[2];
+        if(yOverflow) this->mouseY += 255;
     }
-    if(mouseX < 0) mouseX = 0;
-    if(mouseX > basicRenderer.framebuffer->Width - 1) mouseX = basicRenderer.framebuffer->Width - 8;
-    if(mouseY < 0) mouseY = 0;
-    if(mouseY > basicRenderer.framebuffer->Height - 16) mouseY = basicRenderer.framebuffer->Height - 16;
-    basicRenderer.ClearMouseCursor(MousePointer, oldMouseX, oldMouseY);
-    basicRenderer.DrawOverlayMouseCursor(MousePointer, mouseX, mouseY, WHITE);
-    if(MousePacket[0] & PS2LEFTBUTTON)
+    if(this->mouseX < 0) this->mouseX = 0;
+    if(this->mouseX > basicRenderer.framebuffer->Width - 1) this->mouseX = basicRenderer.framebuffer->Width - 8;
+    if(this->mouseY < 0) this->mouseY = 0;
+    if(this->mouseY > basicRenderer.framebuffer->Height - 16) this->mouseY = basicRenderer.framebuffer->Height - 16;
+
+    if(this->MousePacket[0] & PS2LEFTBUTTON)
     {
-        // basicRenderer.putIndependantChar('a', GREEN, (unsigned int)mouseX, (unsigned int)mouseY);
         basicRenderer.Logln("Mouse PS2 => Left click!");
     }
-    if(MousePacket[0] & PS2MIDDLEBUTTON)
+    if(this->MousePacket[0] & PS2MIDDLEBUTTON)
     {
-        // basicRenderer.putIndependantChar('a', RED, (unsigned int)mouseX, (unsigned int)mouseY);
         basicRenderer.Logln("Mouse PS2 => Middle click!");
     }
-    if(MousePacket[0] & PS2RIGHTBUTTON)
+    if(this->MousePacket[0] & PS2RIGHTBUTTON)
     {
-        // basicRenderer.putIndependantChar('a', BLUE, (unsigned int)mouseX, (unsigned int)mouseY);
         basicRenderer.Logln("Mouse PS2 => Right click!");
     }
-    MousePackedReady = false;
-    oldMouseX = mouseX;
-    oldMouseY = mouseY;
+    this->hide();
+    this->show(WHITE);
+    this->MousePackedReady = false;
+    this->oldMouseX = this->mouseX;
+    this->oldMouseY = this->mouseY;
+}
+
+void Mouse::show(uint32_t colour)
+{
+    int futurx = this->mouseX;
+    int futury = this->mouseY;
+    int xMax = 16;
+    int yMax = 16;
+    int differenceX = basicRenderer.framebuffer->Width - this->mouseX;
+    int differenceY = basicRenderer.framebuffer->Height - this->mouseY;
+    if(differenceX < 16) xMax = differenceX;
+    if(differenceY < 16) yMax = differenceY;
+    for(int y = 0; y < yMax; y++)
+    {
+        for(int x = 0; x < xMax; x++)
+        {
+            int bit = y * HEIGHT_CHAR + x;
+            int byte = bit / WIDTH_CHAR;
+            if((MousePointer[byte] & (0b10000000) >> (x % 8)))
+            {
+                this->MouseCursorBuffer[x + y * 16] = basicRenderer.GetPixel(futurx + x, futury + y);
+                basicRenderer.putPixel(futurx + x, futury + y, colour);
+                this->MouseCursorBufferAfter[x + y * 16] = basicRenderer.GetPixel(futurx + x, futury + y);
+            }
+        }
+    }
+    this->MouseDrawn = true;
+}
+
+void Mouse::hide()
+{
+    if(!this->MouseDrawn) return;
+    int futurx = this->oldMouseX;
+    int futury = this->oldMouseY;
+    int xMax = 16;
+    int yMax = 16;
+    int differenceX = basicRenderer.framebuffer->Width - this->oldMouseX;
+    int differenceY = basicRenderer.framebuffer->Height - this->oldMouseY;
+    if(differenceX < 16) xMax = differenceX;
+    if(differenceY < 16) yMax = differenceY;
+    for(int y = 0; y < yMax; y++)
+    {
+        for(int x = 0; x < xMax; x++)
+        {
+            int bit = y * HEIGHT_CHAR + x;
+            int byte = bit / WIDTH_CHAR;
+            if((MousePointer[byte] & (0b10000000) >> (x % 8)))
+            {
+                if(basicRenderer.GetPixel(futurx + x, futury + y) == this->MouseCursorBufferAfter[x + y * 16])
+                {
+                    basicRenderer.putPixel(futurx + x, futury + y, this->MouseCursorBuffer[x + y * 16]);
+                }
+            }
+        }
+    }
 }
