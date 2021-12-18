@@ -167,7 +167,6 @@ void BasicRenderer::scroll(uint8_t n)
     uint32_t *start = (uint32_t*)(base + pixnumber);
     for(uint32_t *pixel = start; pixel < end; pixel++) *(pixel - pixnumber) = *pixel;
     MainTextCursor.y -= n * HEIGHT_CHAR;
-    mouse.show(WHITE);
 }
 
 void BasicRenderer::verif_coos_for_scroll()

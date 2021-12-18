@@ -165,6 +165,7 @@ void Mouse::main()
 
 void Mouse::show(uint32_t colour)
 {
+    this->hide();
     int futurx = this->mouseX;
     int futury = this->mouseY;
     int xMax = 16;
