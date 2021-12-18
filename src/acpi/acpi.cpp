@@ -73,6 +73,21 @@ ACPI::ACPI(struct RSDPDescriptorNewVersion *rsdp)
 
     FixedACPIDescriptionTable _fadt(MainSystemConfiguration.fadt);
     _fadt.main();
+
+    // Now we need to locate APIC table to have more informations about the cpu and to store them in memory
+
+    struct SDTCommonHeader *apic = this->FindTable((char*)"APIC");
+
+    if(apic == NULL)
+    {
+        panic("Unable to locate APIC table!");
+    }
+    else
+    {
+        basicRenderer.Logln("APIC located!");
+        // apic_class.init(apic);
+        MainSystemConfiguration.apic = apic;
+    }
 }
 
 ACPI::~ACPI()

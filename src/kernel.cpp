@@ -135,6 +135,8 @@ extern "C" void _start(BootInfo *_bootInfo)
 
     CPU cpu;
 
+    apic_class.init(MainSystemConfiguration.apic);
+
     while(true)
     {
         // ProcessMousePacket();

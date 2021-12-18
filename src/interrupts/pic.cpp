@@ -39,3 +39,9 @@ void PIC_EndSlave()
     outb(PIC2_CMD, PIC_EOI);
     outb(PIC1_CMD, PIC_EOI);
 }
+
+void MaskAllInterrupts()
+{
+    outb(PIC1_DATA, 0b11111111);
+    outb(PIC2_DATA, 0b11111111);
+}

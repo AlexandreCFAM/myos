@@ -5,6 +5,7 @@
 #include "../panic.h"
 #include "sdt.h"
 #include "fadt.h"
+#include "apic.h"
 
 class ACPI
 {
@@ -32,6 +33,7 @@ struct SystemConfiguration
     uint8_t PowerManagementProfile;
     XSDT *xsdt;
     FADT *fadt;
+    SDTCommonHeader *apic;
 };
 
 extern SystemConfiguration MainSystemConfiguration;

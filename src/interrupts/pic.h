@@ -16,5 +16,6 @@
 void RemapPIC();
 void PIC_EndMaster();
 void PIC_EndSlave();
+void MaskAllInterrupts();
 
 #endif

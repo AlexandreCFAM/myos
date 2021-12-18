@@ -216,12 +216,15 @@ void BasicRenderer::ClearMouseCursor(uint8_t *mouseCursor, long x, long y)
 
 void BasicRenderer::scroll(uint8_t n)
 {
+    // Need to clear mouse cursor before scrolling
+    this->ClearMouseCursor(MousePointer, mouseX, mouseY);
     uint32_t *base = (uint32_t*)BasicRenderer::framebuffer->BaseAddress;
     uint32_t pixnumber = n * BasicRenderer::framebuffer->PixelsPerScanLine * HEIGHT_CHAR;
     uint32_t *end = (uint32_t*)(base + (uint32_t)(BasicRenderer::framebuffer->Width * BasicRenderer::framebuffer->Height));
     uint32_t *start = (uint32_t*)(base + pixnumber);
     for(uint32_t *pixel = start; pixel < end; pixel++) *(pixel - pixnumber) = *pixel;
     MainTextCursor.y -= n * HEIGHT_CHAR;
+    this->DrawOverlayMouseCursor(MousePointer, mouseX, mouseY, WHITE);
 }
 
 void BasicRenderer::verif_coos_for_scroll()
