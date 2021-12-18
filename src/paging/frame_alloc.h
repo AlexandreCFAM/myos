@@ -5,13 +5,13 @@
 #include "../memory/bitmap.h"
 #include "../memory.h"
 #include "../lib/defs.h"
-#include "../renderer.h"
+#include "../graphics/textrenderer.h"
 #include "../kernel.h"
 
 class PageFrameAllocator
 {
 public:
-    void ReadEfiMemoryMap(EFI_MEMORY_DESCRIPTOR *MemoryMap, size_t MapSize, size_t MapDescriptorSize, BasicRenderer *renderer);
+    void ReadEfiMemoryMap(EFI_MEMORY_DESCRIPTOR *MemoryMap, size_t MapSize, size_t MapDescriptorSize, TextRenderer *renderer);
     Bitmap PageBitmap;
     void FreePage(void *address);
     void LockPage(void *address);

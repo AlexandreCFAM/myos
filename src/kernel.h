@@ -1,12 +1,12 @@
 #ifndef __KERNEL__H
 #define __KERNEL__H
 
-#include "renderer.h"
+#include "graphics/textrenderer.h"
 #include "lib/cstr.h"
 #include "memory/efiMemory.h"
 #include "memory.h"
 #include "memory/bitmap.h"
-#include "renderer.h"
+// #include "renderer.h"
 #include "paging/frame_alloc.h"
 // #include "paging/paging.h"
 // #include "paging/PageMapIndexer.h"
@@ -47,7 +47,7 @@ struct KernelInfo
 };
 
 extern Point MainTextCursor;
-extern BasicRenderer basicRenderer;
+extern TextRenderer basicRenderer;
 extern uint64_t _KernelStart;
 extern uint64_t _KernelEnd;
 extern BootInfo *bootInfo;

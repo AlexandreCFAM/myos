@@ -2,30 +2,11 @@
 
 Mouse mouse;
 
-uint8_t MousePointer[] = {
-    0b00011000, 0b00011000,
-    0b00011000, 0b00011000,
-    0b00011000, 0b00011000,
-    0b00011000, 0b00011000,
-    0b00011000, 0b00011000,
-    0b00011000, 0b00011000,
-    0b00000000, 0b00000000,
-    0b00000000, 0b00000000,
-    0b01000000, 0b00000010,
-    0b01100000, 0b00000110,
-    0b01100000, 0b00000110,
-    0b01100000, 0b00000110,
-    0b01100000, 0b00000110,
-    0b01100000, 0b00000110,
-    0b01111111, 0b11111110,
-    0b00111111, 0b11111100,
-
-};
-
 Mouse::Mouse(){}
 
 void Mouse::init()
 {
+    this->current_cursor = DefaultMousePointer;
     outb(0x64, 0xA8);
     this->wait();
     outb(0x64, 0x20);
@@ -146,15 +127,27 @@ void Mouse::main()
 
     if(this->MousePacket[0] & PS2LEFTBUTTON)
     {
-        basicRenderer.Logln("Mouse PS2 => Left click!");
+        this->hide();
+        this->current_cursor = WhenLeftClickMousePointer;
+        this->click.set(SET_LEFT_CLICK);
     }
-    if(this->MousePacket[0] & PS2MIDDLEBUTTON)
+    else if(this->MousePacket[0] & PS2MIDDLEBUTTON)
     {
-        basicRenderer.Logln("Mouse PS2 => Middle click!");
+        this->hide();
+        this->current_cursor = WhenMiddleClickMousePointer;
+        this->click.set(SET_MIDDLE_CLICK);
     }
-    if(this->MousePacket[0] & PS2RIGHTBUTTON)
+    else if(this->MousePacket[0] & PS2RIGHTBUTTON)
     {
-        basicRenderer.Logln("Mouse PS2 => Right click!");
+        this->hide();
+        this->current_cursor = WhenRightClickMousePointer;
+        this->click.set(SET_RIGHT_CLICK);
+    }
+    else
+    {
+        this->hide();
+        this->click.set(CLEAR_ALL_CLICKS);
+        this->current_cursor = DefaultMousePointer;
     }
     this->hide();
     this->show(WHITE);
@@ -180,7 +173,7 @@ void Mouse::show(uint32_t colour)
         {
             int bit = y * HEIGHT_CHAR + x;
             int byte = bit / WIDTH_CHAR;
-            if((MousePointer[byte] & (0b10000000) >> (x % 8)))
+            if((this->current_cursor[byte] & (0b10000000) >> (x % 8)))
             {
                 this->MouseCursorBuffer[x + y * 16] = basicRenderer.GetPixel(futurx + x, futury + y);
                 basicRenderer.putPixel(futurx + x, futury + y, colour);
@@ -208,7 +201,7 @@ void Mouse::hide()
         {
             int bit = y * HEIGHT_CHAR + x;
             int byte = bit / WIDTH_CHAR;
-            if((MousePointer[byte] & (0b10000000) >> (x % 8)))
+            if((this->current_cursor[byte] & (0b10000000) >> (x % 8)))
             {
                 if(basicRenderer.GetPixel(futurx + x, futury + y) == this->MouseCursorBufferAfter[x + y * 16])
                 {
@@ -216,5 +209,31 @@ void Mouse::hide()
                 }
             }
         }
+    }
+}
+
+void Click::set(uint8_t value)
+{
+    switch(value)
+    {
+        case CLEAR_ALL_CLICKS:
+            this->left = this->middle = this->right = 0;
+            break;
+        case SET_LEFT_CLICK:
+            this->left = 1;
+            this->middle = this->right = 0;
+            break;
+        case SET_MIDDLE_CLICK:
+            this->middle = 1;
+            this->left = this->right = 0;
+            break;
+        case SET_RIGHT_CLICK:
+            this->right = 1;
+            this->left = this->middle = 0;
+            break;
+        case SET_ALL_CLICKS:
+            this->left = this->middle = this->right = 0;
+            break;
+        default: break;
     }
 }

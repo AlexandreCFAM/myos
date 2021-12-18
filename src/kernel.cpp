@@ -9,7 +9,7 @@ void *__dso_handle;
 
 Point MainTextCursor;
 IDTR idtr;
-BasicRenderer basicRenderer(NULL, NULL); //_start will init it
+TextRenderer basicRenderer(NULL, NULL); //_start will init it
 BootInfo *bootInfo;
 KernelInfo *kernelInfo;
 
@@ -17,7 +17,7 @@ extern "C" void _start(BootInfo *_bootInfo)
 {
     bootInfo = _bootInfo;
 
-    basicRenderer = BasicRenderer(bootInfo->framebuffer, bootInfo->psf1_font);
+    basicRenderer = TextRenderer(bootInfo->framebuffer, bootInfo->psf1_font);
     basicRenderer.Logln("Kernel boot process...");
 
     /*Global Descriptor Table*/
@@ -139,7 +139,6 @@ extern "C" void _start(BootInfo *_bootInfo)
 
     while(true)
     {
-        // ProcessMousePacket();
         mouse.main();
     }
     while(true);

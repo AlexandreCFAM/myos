@@ -15,7 +15,7 @@ PageFrameAllocator GlobalAllocator;
 uint64_t pageBitmapIndex = 0;
 
 
-void PageFrameAllocator::ReadEfiMemoryMap(EFI_MEMORY_DESCRIPTOR *MemoryMap, size_t MapSize, size_t MapDescriptorSize, BasicRenderer *renderer)
+void PageFrameAllocator::ReadEfiMemoryMap(EFI_MEMORY_DESCRIPTOR *MemoryMap, size_t MapSize, size_t MapDescriptorSize, TextRenderer *renderer)
 {
     if(Initialized) return;
     uint64_t MemoryMapEntries = MapSize / MapDescriptorSize;
