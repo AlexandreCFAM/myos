@@ -50,6 +50,7 @@ public:
     void main();
     void show(uint32_t color);
     void hide();
+    void bob_animation();
     long mouseX;
     long mouseY;
     long oldMouseX;
@@ -67,6 +68,7 @@ private:
     uint8_t MousePacket[4];
     bool MousePackedReady = false;
     uint8_t *current_cursor;
+    uint64_t last_animation_done;
 };
 
 extern Mouse mouse;

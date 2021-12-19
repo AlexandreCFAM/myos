@@ -21,6 +21,7 @@ void Mouse::init()
     this->read();
     this->write(0xF4);
     this->read();
+    this->last_animation_done = PIT.Tick;
 }
 
 Mouse::~Mouse(){}
@@ -149,8 +150,20 @@ void Mouse::main()
         this->click.set(CLEAR_ALL_CLICKS);
         this->current_cursor = DefaultMousePointer;
     }
+    /*if(PIT.Tick - this->last_animation_done >= 7500)
+    {
+        this->bob_animation();
+        this->last_animation_done = PIT.Tick;
+    }
+    else
+    {
+        this->hide();
+        this->show(WHITE);
+    }*/
+
     this->hide();
     this->show(WHITE);
+
     this->MousePackedReady = false;
     this->oldMouseX = this->mouseX;
     this->oldMouseY = this->mouseY;
@@ -209,6 +222,22 @@ void Mouse::hide()
                 }
             }
         }
+    }
+}
+
+void Mouse::bob_animation()
+{
+    uint8_t *last_cursor_selected = this->current_cursor;
+    for(char i = 0; i < 1; i++)
+    {
+        this->hide();
+        this->current_cursor = WhenMiddleClickMousePointer;
+        this->show(WHITE);
+        PIT.sleep_milliseconds(200);
+        this->hide();
+        this->current_cursor = last_cursor_selected;
+        this->show(WHITE);
+        PIT.sleep_milliseconds(100);
     }
 }
 

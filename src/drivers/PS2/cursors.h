@@ -6,6 +6,6 @@
 extern uint8_t DefaultMousePointer[];
 extern uint8_t WhenLeftClickMousePointer[];
 extern uint8_t WhenRightClickMousePointer[];
-extern uint8_t WhenMiddleClickMousePointer[];
+extern uint8_t WhenMiddleClickMousePointer[];   
 
 #endif

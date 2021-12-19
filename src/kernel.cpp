@@ -18,6 +18,7 @@ extern "C" void _start(BootInfo *_bootInfo)
     bootInfo = _bootInfo;
 
     basicRenderer = TextRenderer(bootInfo->framebuffer, bootInfo->psf1_font);
+    basicRenderer.clear();
     basicRenderer.Logln("Kernel boot process...");
 
     /*Global Descriptor Table*/

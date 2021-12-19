@@ -35,22 +35,22 @@ void TextRenderer::putChar(char c, unsigned int colour, unsigned int _x, unsigne
         MainTextCursor.x = 0;
         MainTextCursor.y += HEIGHT_CHAR;
     }
-    if(MainTextCursor.y >= 976)
+    if(MainTextCursor.y >= 700)
     {
-        TextRenderer::scroll(1);
+        this->scroll(1);
     }
 }
 
 void TextRenderer::putChar(char c)
 {
-    TextRenderer::putChar(c, WHITE, MainTextCursor.x, MainTextCursor.y);
+    this->putChar(c, WHITE, MainTextCursor.x, MainTextCursor.y);
 }
 
 void TextRenderer::putIndependantChar(char c, unsigned int colour, unsigned int _x, unsigned int _y)
 {
     unsigned int lastX = MainTextCursor.x;
     unsigned int lastY = MainTextCursor.y;
-    TextRenderer::putChar(c, colour, _x, _y);
+    this->putChar(c, colour, _x, _y);
     MainTextCursor.x = lastX;
     MainTextCursor.y = lastY;
 }
@@ -68,10 +68,10 @@ void TextRenderer::ClearChar()
         MainTextCursor.y -= HEIGHT_CHAR;
     }
 
-    unsigned int* pixPtr = (unsigned int*)TextRenderer::framebuffer->BaseAddress;
+    unsigned int* pixPtr = (unsigned int*)this->framebuffer->BaseAddress;
     for (unsigned long y = yOff; y < yOff + HEIGHT_CHAR; y++){
         for (unsigned long x = xOff - WIDTH_CHAR; x < xOff; x++){
-                    *(unsigned int*)(pixPtr + x + (y * TextRenderer::framebuffer->PixelsPerScanLine)) = ClearColour;
+                    *(unsigned int*)(pixPtr + x + (y * this->framebuffer->PixelsPerScanLine)) = ClearColour;
         }
     }
 }
