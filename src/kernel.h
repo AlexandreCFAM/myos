@@ -30,6 +30,12 @@
 #include "drivers/keyboard/keyboard.h"
 #include "cpu/cpu.h"
 
+#define QEMU 0
+#define VIRTUALBOX 1
+#define REAL_HARDWARE 3
+
+#define MACHINE QEMU
+
 struct BootInfo
 {
 	FrameBuffer *framebuffer;

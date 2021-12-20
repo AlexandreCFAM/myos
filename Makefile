@@ -80,5 +80,7 @@ run_virtualbox:
 	rm $(USB_PATH)/zap-light16.psf
 	cp bin/zap-light16.psf $(USB_PATH)/zap-light16.psf
 	sudo VBoxManage startvm "myos"
+run_hardware:
+	poweroff
 update_bootloader_archive:
 	python3 bootloader.py

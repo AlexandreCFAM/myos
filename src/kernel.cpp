@@ -17,16 +17,16 @@ extern "C" void _start(BootInfo *_bootInfo)
 {
     bootInfo = _bootInfo;
 
-    basicRenderer = TextRenderer(bootInfo->framebuffer, bootInfo->psf1_font);
-    basicRenderer.clear();
-    basicRenderer.Logln("Kernel boot process...");
-
     /*Global Descriptor Table*/
     GDTDescriptor gdtDescriptor;
     gdtDescriptor.Size = sizeof(GDT) - 1;
     gdtDescriptor.Offset = (uint64_t)&DefaultGDT;
     LoadGDT(&gdtDescriptor);
     
+    basicRenderer = TextRenderer(bootInfo->framebuffer, bootInfo->psf1_font);
+    basicRenderer.clear();
+    basicRenderer.Logln("Kernel boot process...");
+
     /*Paging - PageTable - Kernel Size*/
     uint64_t MemoryMapEntries = bootInfo->mMapSize / bootInfo->mMapDescriptorSize;
 

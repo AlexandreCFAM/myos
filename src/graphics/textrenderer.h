@@ -65,7 +65,6 @@ public:
     void putPixel(uint32_t x, uint32_t y, uint32_t color);
     uint32_t GetPixel(uint32_t x, uint32_t y);
     void scroll(uint8_t n);
-    void verif_coos_for_scroll();
     void Error(const char *text);
     void Errorln(const char *text);
     void ErrorFlag();
@@ -78,6 +77,7 @@ public:
     unsigned int ClearColour;
     uint32_t CurrentColour;
     uint64_t offset;
+    uint16_t y_max;
 };
 
 extern TextRenderer basicRenderer;

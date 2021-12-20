@@ -12,6 +12,21 @@ TextRenderer::TextRenderer(FrameBuffer *_framebuffer, PSF1_FONT *_psf1_font)
     MainTextCursor.y = 0;
     ClearColour = 0;
     offset = 0;
+    switch(MACHINE)
+    {
+        case VIRTUALBOX:
+            this->y_max = 700;
+            break;
+        case QEMU:
+            this->y_max = 976;
+            break;
+        case REAL_HARDWARE:
+            this->y_max = this->framebuffer->Height;
+            break;
+        default:
+            this->y_max = this->framebuffer->Height;
+            break;
+    }
 }
 
 TextRenderer::~TextRenderer(){}
@@ -35,7 +50,7 @@ void TextRenderer::putChar(char c, unsigned int colour, unsigned int _x, unsigne
         MainTextCursor.x = 0;
         MainTextCursor.y += HEIGHT_CHAR;
     }
-    if(MainTextCursor.y >= 700)
+    if(MainTextCursor.y >= this->y_max)
     {
         this->scroll(1);
     }
@@ -167,11 +182,6 @@ void TextRenderer::scroll(uint8_t n)
     uint32_t *start = (uint32_t*)(base + pixnumber);
     for(uint32_t *pixel = start; pixel < end; pixel++) *(pixel - pixnumber) = *pixel;
     MainTextCursor.y -= n * HEIGHT_CHAR;
-}
-
-void TextRenderer::verif_coos_for_scroll()
-{
-    if(MainTextCursor.y >= TextRenderer::framebuffer->Height) TextRenderer::scroll(1); else;
 }
 
 void TextRenderer::Error(const char *text)
