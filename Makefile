@@ -70,8 +70,10 @@ buildimg:
 	cp ../gnu-efi/x86_64/bootloader/main.efi ../usb/efi/boot/bootx64.efi
 	cp bin/kernel.elf ../usb/kernel.elf
 	cp bin/zap-light16.psf ../usb/zap-light16.psf
+	python3 ../bootloader.py
 run_qemu:
-	qemu-system-x86_64 -drive file=$(BUILDDIR)/$(OSNAME).img -m 50M -cpu qemu64 -drive if=pflash,format=raw,unit=0,file="$(OVMFDIR)/OVMF_CODE-pure-efi.fd",readonly=on -drive if=pflash,format=raw,unit=1,file="$(OVMFDIR)/OVMF_VARS-pure-efi.fd" -smp 1
+	qemu-system-x86_64 -m 50M ../bootloader/myos.iso
+	# qemu-system-x86_64 -d int -drive file=$(BUILDDIR)/$(OSNAME).img -m 50M -cpu qemu64 -drive if=pflash,format=raw,unit=0,file="$(OVMFDIR)/OVMF_CODE-pure-efi.fd",readonly=on -drive if=pflash,format=raw,unit=1,file="$(OVMFDIR)/OVMF_VARS-pure-efi.fd" -smp 1
 run_virtualbox:
 	rm $(USB_PATH)/efi/boot/bootx64.efi
 	cp ../gnu-efi/x86_64/bootloader/main.efi $(USB_PATH)/efi/boot/bootx64.efi

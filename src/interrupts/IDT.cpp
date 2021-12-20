@@ -22,4 +22,5 @@ void SetIDTGate(void *handler, uint8_t entryOffset, uint8_t type_attr, uint8_t s
     interrupt->SetOffset((uint64_t)handler);
     interrupt->type_attr = type_attr;
     interrupt->selector = selector;
+
 }

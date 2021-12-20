@@ -50,6 +50,11 @@ extern "C" void _start(BootInfo *_bootInfo)
     idtr.Limit = 0x0FFF;
     idtr.Offset = (uint64_t)GlobalAllocator.RequestPage();
 
+    IDTDescriptorEntry *IntPageFault =(IDTDescriptorEntry*)(idtr.Offset + 0x0E * sizeof(IDTDescriptorEntry)); //page fault
+    IntPageFault->SetOffset((uint64_t)PageFaultHandler);
+    IntPageFault->type_attr = IDT_TA_InterruptGate;
+    IntPageFault->selector = 0x08;
+
     SetIDTGate((void*)PageFaultHandler, 0xE, IDT_TA_InterruptGate, 0x08);
     SetIDTGate((void*)DoubleFaultHandler, 0x8, IDT_TA_InterruptGate, 0x08);
     SetIDTGate((void*)GeneralProtectionHandler, 0xD, IDT_TA_InterruptGate, 0x08);
@@ -58,6 +63,7 @@ extern "C" void _start(BootInfo *_bootInfo)
     SetIDTGate((void*)PITHandler, 0x20, IDT_TA_InterruptGate, 0x08);
 
     asm ("lidt %0" : : "m" (idtr));
+    asm ("sti");
     basicRenderer.OK();
 
     basicRenderer.Log("Remaping PIC...");
@@ -175,8 +181,6 @@ void KernelShowBootInfos(BootInfo *bootInfo, uint64_t kernelSize, uint64_t Memor
     basicRenderer.Log("Reserved memory : ");
     basicRenderer.Print(ToString((double)GlobalAllocator.GetReservedMemory() / 1024 / 1024));
     basicRenderer.Println(" MB.");
-    // basicRenderer.Log("Paging initialized!");
-    // basicRenderer.OK();
     basicRenderer.Log("Global Descriptor Table initialized!");
     basicRenderer.OK();
 }
